@@ -7,23 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
 {
-    protected $fillable = [
-        'user_id',  // идентификатор пользователя, совершившего покупку
-        'product_id', // идентификатор продукта, который был куплен
-        'quantity', // количество купленных продуктов
-        'price', // цена одного продукта
-        'created_at', // дата и время совершения покупки
-        'updated_at', // дата и время последнего обновления записи
-    ];
+    use HasFactory;
+    
+    protected $fillable = ['product_id', 'quantity', 'price', 'purchase_date'];
 
-    // Определение отношений с другими моделями, если это необходимо
-    public function user()
+    // Метод для получения покупок за последний месяц
+    public static function purchasesLastMonth()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
+        return self::where('purchase_date', '>=', now()->subMonth())->get();
     }
 }
